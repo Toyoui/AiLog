@@ -43,6 +43,7 @@ docker build -t myapp .
 docker run -d -p 5005:5005 --name myapi myapp
 ```
 ### 5.如何更新？
+- 把你增量包文件添加到AITools.NET.API 文件夹下
 ```shell
 docker kill myapi
 docker rm myapi
