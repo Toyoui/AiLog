@@ -2,14 +2,14 @@
 
 # 检测操作系统类型
 if [ -f /etc/os-release ]; then
-    os_type=$(awk -F'=' '/^ID=/{print $2}' /etc/os-release)
+    os_type=$(awk -F'=' '/^ID=/{print $2}' /etc/os-release | tr -d '"')
 elif [ -f /etc/redhat-release ]; then
     os_type="centos"
 elif [ -f /etc/debian_version ]; then
-    debian_version=$(cat /etc/debian_version)
-    if grep -q "Debian" /etc/issue; then
+    os_type=$(awk '{print $1}' /etc/debian_version | awk -F'.' '{print $1}')
+    if [ "$os_type" == "buster/sid" ] || [ "$os_type" -ge 10 ]; then
         os_type="debian"
-    elif grep -q "Ubuntu" /etc/issue; then
+    elif [ "$os_type" == "bionic" ] || [ "$os_type" -ge 18 ]; then
         os_type="ubuntu"
     else
         echo "无法确定操作系统类型"
@@ -19,6 +19,7 @@ else
     echo "无法确定操作系统类型"
     exit 1
 fi
+
 
 # 判断文件是否存在
 if [ -e "dockeroc.sh" ]; then
