@@ -1,14 +1,19 @@
 #!/bin/bash
 
 # 检测操作系统类型
-if [[ -e /etc/redhat-release ]]; then
+if [ -f /etc/os-release ]; then
+    os_type=$(awk -F'=' '/^ID=/{print $2}' /etc/os-release)
+elif [ -f /etc/redhat-release ]; then
     os_type="centos"
-elif [[ -e /etc/debian_version ]]; then
+elif [ -f /etc/debian_version ]; then
     debian_version=$(cat /etc/debian_version)
-    if [[ $debian_version == "9."* ]]; then
+    if grep -q "Debian" /etc/issue; then
         os_type="debian"
-    else
+    elif grep -q "Ubuntu" /etc/issue; then
         os_type="ubuntu"
+    else
+        echo "无法确定操作系统类型"
+        exit 1
     fi
 else
     echo "无法确定操作系统类型"
