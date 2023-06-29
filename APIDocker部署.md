@@ -21,6 +21,20 @@ mkdir AITools.NET.API
 touch Dockerfile
 ```
 - 把Api所有文件放入 AITools.NET.API 文件夹
+- 把下面内容写入Dockerfile文件
+```
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS build
+ENV TZ=Asia/Shanghai
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+WORKDIR /app
+COPY AITools.NET.API/ ./
+WORKDIR /app
+EXPOSE 5005
+#安装fontconfig
+RUN apt-get clean
+RUN apt-get update && apt-get install -y fontconfig procps
+ENTRYPOINT ["dotnet", "AITools.NET.Web.Entry.dll"]
+```
 
 ### 4.运行docker启动api
 ```shell
