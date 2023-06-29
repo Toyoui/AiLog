@@ -15,6 +15,16 @@ else
     exit 1
 fi
 
+# 判断文件是否存在
+if [ -e "dockeroc.sh" ]; then
+    # 如果文件存在，删除文件
+    rm dockeroc.sh
+    echo "dockeroc.sh文件已删除"
+else
+    # 如果文件不存在，输出提示信息
+    echo "dockeroc.sh文件不存在"
+fi
+
 # 安装Docker和相关组件
 if [[ $os_type == "centos" ]]; then
     # centos系统的安装脚本
