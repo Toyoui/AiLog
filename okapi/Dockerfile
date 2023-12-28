@@ -1,20 +1,24 @@
-# 使用官方的Golang镜像作为基础镜像
+# 基础镜像
 FROM golang:latest
 
-# 设置工作目录为/app
+# 使用 Go Modules
+ENV GO111MODULE=on
+ENV GOPROXY=https://goproxy.io,direct
+
+# 设置工作目录
 WORKDIR /app
 
-# 将你的源码拷贝到工作目录中
+# 初始化Go modules
+RUN go mod init example.com/okapi
+
+# 将代码复制到容器中
 COPY . .
 
-# 下载所有依赖的包
-RUN go mod download
-
-# 构建可执行文件
+# 编译Go程序
 RUN go build -o main .
 
 # 暴露42042端口，让外部可以访问你的服务
 EXPOSE 42042
 
-# 在容器启动时运行你的服务
+# 运行Go程序
 CMD ["./main"]
