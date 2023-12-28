@@ -8,11 +8,15 @@ ENV GOPROXY=https://goproxy.io,direct
 # 设置工作目录
 WORKDIR /app
 
+# 将代码和 go.mod 文件复制到容器中
+COPY . .
+COPY go.mod .
+
 # 初始化Go modules
 RUN go mod init example.com/okapi
 
-# 将代码复制到容器中
-COPY . .
+# 下载依赖
+RUN go mod download
 
 # 编译Go程序
 RUN go build -o main .
